@@ -1,5 +1,5 @@
 from functions import analyse
-
+from random import randint
 with open("5letter.txt", "r") as file:
     words = file.read().split()
     
@@ -12,14 +12,14 @@ def round(guess, homeless, removed):
 
     for i in range(len(guess)):
         if guess[i] == "":
-            guess[i] = input("Letter %i: " % (i + 1))
+            guess[i] = input("Letter {}: ".format(i + 1))
         else:
-            print("Letter %i: %s" % ( i + 1, guess[i] ))
+            print("Letter {number}: {text}".format(number =  i + 1,text = guess[i] ))
     print("")
 
     print("Input homeless and removed letters, all lowercase and no spaces e.g bdgsfa")
-    homeless += input("Homeless Letters: %s" % homeless)
-    removed += input("Removed Letters: %s" % removed)
+    homeless += input("Homeless Letters: {}".format(homeless))
+    removed += input("Removed Letters: {}".format(removed))
     print("")
     
     for c in alphabet:
@@ -59,6 +59,9 @@ guess = ["", "", "", "", ""]
 homeless = ""
 removed = ""
 
+print("Word with most common letters: arose")
+print("Random Word: {}\n".format(words[randint(0, len(words) - 1)]))
+
 while "" in guess:
     results = round(guess, homeless, removed)
     guess = results[0]
@@ -69,6 +72,6 @@ finalword = ""
 for c in guess:
     finalword += c
 
-print("The answer is: %s" % finalword)
+print("The answer is: {}".format(finalword))
 
      
