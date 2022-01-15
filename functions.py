@@ -21,7 +21,10 @@ def analyse(allwords, words, letters, used):
 
     percentage = {}
     for n in frequency:
-        percentage[n] = round(((frequency[n] / totalletters) * 100), 2)
+        if totalletters > 0:
+            percentage[n] = round(((frequency[n] / totalletters) * 100), 2)
+        else:
+            percentage[n] = 0
 
     maxword = ""
     for word in words:
@@ -45,7 +48,9 @@ def score(word, scores, used):
     for i in word:
         if word.index(i) != len(word) - 1 - word[::-1].index(i):
             return 0
-        elif i in used:
+        if i in used:
+            return 0
+        elif i not in scores:
             return 0
         else:
             score += scores[i]
