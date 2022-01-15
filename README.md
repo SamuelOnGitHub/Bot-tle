@@ -1,2 +1,2 @@
-# Bot-tle
+# Wiredle
 Bot to play Wordle
