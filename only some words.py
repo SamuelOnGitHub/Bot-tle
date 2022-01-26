@@ -1,66 +1,72 @@
-from functions import analyse
+from functions import analyse, stringify, optimal
 from random import randint
-with open("5letter.txt", "r") as file:
-    words = file.read().split()
-    
+
+length = 0
+words = []
+if input("Use potential Wordle word list (y/n): ") == "y":
+    with open("first2500fiveletterwords.txt", "r") as file:
+        fulltext = file.read().split()
+        length = 5
+        for w in fulltext:
+            if w.isalpha() and len(w) == length:
+                words.append(w)
+else:
+    with open("large.txt", "r") as file:
+        fulltext = file.read().split()
+        length = int(input("Length of word to be guessed: "))
+        for w in fulltext:
+            if w.isalpha() and len(w) == length:
+                words.append(w)
+
+print("\n'Optimal' Word: {}".format(optimal(length)))
+print("Random Word: {}".format(words[randint(0, len(words) - 1)]))
+
 def round(guess, homeless, removed):
 
-    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    alphabet="abcdefghijklmnopqrstuvwxyz"
     letters = ""
 
-    print("Input lowercase letter if KNOWN for each place, else leave blank ")
-
-    for i in range(len(guess)):
-        if guess[i] == "":
-            guess[i] = input("Letter {}: ".format(i + 1))
-        else:
-            print("Letter {number}: {text}".format(number =  i + 1,text = guess[i] ))
-    print("")
-
-    print("Input homeless and removed letters, all lowercase and no spaces e.g bdgsfa")
-    homeless += input("Homeless Letters: {}".format(homeless))
-    removed += input("Removed Letters: {}".format(removed))
-    print("")
+    print("\nInput Known Letters")
     
+    for i in range(length):
+        if guess[i] == "":
+            guess[i] = input("Letter {number}: ".format(number = i + 1)).lower()
+        else:
+            print("Letter {number}: {letter}".format(number = i + 1, letter = guess[i].upper()))
+
+    print("\nInput Homeless and Removed Letters")
+
+    homeless += input("Homeless Letters: {}".format(homeless)).lower()
+    removed += input("Removed Letters: {}".format(removed)).lower()
+
     for c in alphabet:
         if c not in removed:
-            letters += c;
+            letters += c
 
     correctwords = set()
-
+    
     for w in words:
-        if (w[0] == guess[0] or not guess[0].isalpha()) and (w[1] == guess[1] or not guess[1].isalpha()) and (w[2] == guess[2] or not guess[2].isalpha()) and (w[3] == guess[3] or not guess[3].isalpha()) and (w[4] == guess[4] or not guess[4].isalpha()):
+        valid = 1
+        for i in range(length):
+            if w[i] != guess[i] and guess[i].isalpha():
+                valid = 0
+        if valid == 1:
             if all(item in letters for item in w):
                 if all(item in w for item in homeless):
                     correctwords.add(w)
-    print("Viable words: ")
+
+    print("\nViable Words: ")
     for t in correctwords:
         print(t)
 
-    usedletters = homeless
-    for c in guess:
-        usedletters += c
-
-    print("")
-    analyse(words, correctwords, letters, usedletters)
+    analyse(words, correctwords, letters, homeless + stringify(guess))
 
     nextround = input("\nContinue? \n")
     return guess, homeless, removed
- 
 
-
-
-
-alphabet = "abcdefghijklmnopqrstuvwxyz"
-letters = ""
-
-
-guess = ["", "", "", "", ""]
+guess = [""] * length
 homeless = ""
 removed = ""
-
-print("Word with most common letters: arose")
-print("Random Word: {}\n".format(words[randint(0, len(words) - 1)]))
 
 while "" in guess:
     results = round(guess, homeless, removed)
@@ -68,10 +74,4 @@ while "" in guess:
     homeless = results[1]
     removed = results[2]
 
-finalword = ""
-for c in guess:
-    finalword += c
-
-print("The answer is: {}".format(finalword))
-
-     
+print("The answer is: {}".format(stringify(guess)))

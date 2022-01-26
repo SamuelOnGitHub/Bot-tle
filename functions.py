@@ -47,11 +47,21 @@ def score(word, scores, used):
     score = 0
     for i in word:
         if word.index(i) != len(word) - 1 - word[::-1].index(i):
-            return 0
-        if i in used:
+            score += 0
+        elif i in used:
             return 0
         elif i not in scores:
             return 0
         else:
             score += scores[i]
     return score
+
+def stringify(list):
+    text = ""
+    for c in list:
+        text+=c
+    return text
+
+def optimal(length):
+  words = ["a","ia","eta","aero","arose","ariose","erasion","senorita","orleanist","redactions","ulcerations","countervails","pneumogastric","hydromagnetics","dermatoglyphics","stenographically","hypercivilisation","hypercivilizations","hyperinsulinization","psychopharmaceutical","sphygmomanometrically","electrophysiologically","isomerizeparabolization","electrocardiographically","microspectrophotometrical"]
+  return words[length - 1]
